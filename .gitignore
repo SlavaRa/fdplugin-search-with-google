@@ -1,0 +1,5 @@
+obj/
+packages/
+SearchWithGoogle.csproj
+SearchWithGoogle/obj/
+SearchWithGoogle/bin/

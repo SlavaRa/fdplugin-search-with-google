@@ -26,10 +26,7 @@ build_script:
 - nuget restore %PLUGIN_PATH%\%PLUGIN_NAME%.sln
 - msbuild /p:Configuration=Release /p:Platform="Any CPU" /v:m %PLUGIN_PATH%\%PLUGIN_NAME%.sln
 after_build:
-- mkdir %APPVEYOR_BUILD_FOLDER%\$(BaseDir)\Plugins
-- move %PLUGIN_DLL% C:\projects\FlashDevelop\FlashDevelop\Bin\Release\Plugins\SearchWithGoogle_copy.dll
-- ls C:\projects\FlashDevelop\FlashDevelop\Bin\Release\Plugins\
-- mv %PLUGIN_DLL% %APPVEYOR_BUILD_FOLDER%\$(BaseDir)\Plugins\%PLUGIN_NAME%.dll
+- move %PLUGIN_DLL% %APPVEYOR_BUILD_FOLDER%\$(BaseDir)\Plugins\%PLUGIN_NAME%.dll
 - cd %APPVEYOR_BUILD_FOLDER%
 - 7z a %PLUGIN_NAME%.zip $(BaseDir)\
 - mv %PLUGIN_NAME%.zip %PLUGIN_NAME%.fdz

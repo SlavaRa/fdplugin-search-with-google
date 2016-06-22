@@ -13,9 +13,9 @@ namespace SearchWithGoogle
 {
     public class PluginMain : IPlugin
     {
-        string settingFilename;
         readonly ToolStripMenuItem editorMenuItem = new ToolStripMenuItem("&Search with Google");
         readonly ToolStripMenuItem searchMenuItem = new ToolStripMenuItem("&Search with Google");
+        string settingFilename;
 
         #region Required Properties
 
@@ -159,8 +159,9 @@ namespace SearchWithGoogle
         /// </summary>
         void UpdateMenuItems()
         {
-            var sci = PluginBase.MainForm.CurrentDocument.SciControl;
-            var enabled = sci.SelTextSize > 0;
+            var document = PluginBase.MainForm.CurrentDocument;
+            if (document == null) return;
+            var enabled = document.SciControl.SelTextSize > 0;
             editorMenuItem.Enabled = enabled;
             searchMenuItem.Enabled = enabled;
         }

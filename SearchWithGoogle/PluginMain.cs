@@ -1,14 +1,21 @@
+using System;
 using System.ComponentModel;
 using System.IO;
+using System.Windows.Forms;
+using ASCompletion.Completion;
 using PluginCore;
 using PluginCore.Helpers;
+using PluginCore.Localization;
+using PluginCore.Managers;
 using PluginCore.Utilities;
 
 namespace SearchWithGoogle
 {
     public class PluginMain : IPlugin
-	{
+    {
         string settingFilename;
+        readonly ToolStripMenuItem editorMenuItem = new ToolStripMenuItem("&Search with Google");
+        readonly ToolStripMenuItem searchMenuItem = new ToolStripMenuItem("&Search with Google");
 
         #region Required Properties
 
@@ -47,42 +54,49 @@ namespace SearchWithGoogle
         /// </summary>
         [Browsable(false)]
         public object Settings { get; private set; }
-		
-		#endregion
-		
-		#region Required Methods
-		
-		/// <summary>
-		/// Initializes the plugin
-		/// </summary>
-		public void Initialize()
-		{
+
+        #endregion
+
+        #region Required Methods
+
+        /// <summary>
+        /// Initializes the plugin
+        /// </summary>
+        public void Initialize()
+        {
             InitBasics();
             LoadSettings();
             AddEventHandlers();
             CreateMenuItems();
             UpdateMenuItems();
         }
-		
-		/// <summary>
-		/// Disposes the plugin
-		/// </summary>
-		public void Dispose()
-		{
-            SaveSettings();
-		}
-		
-		/// <summary>
-		/// Handles the incoming events
-		/// </summary>
-		public void HandleEvent(object sender, NotifyEvent e, HandlingPriority priority)
-		{
-		}
+
+        /// <summary>
+        /// Disposes the plugin
+        /// </summary>
+        public void Dispose() => SaveSettings();
+
+        /// <summary>
+        /// Handles the incoming events
+        /// </summary>
+        public void HandleEvent(object sender, NotifyEvent e, HandlingPriority priority)
+        {
+            switch (e.Type)
+            {
+                case EventType.FileSwitch:
+                    UpdateMenuItems();
+                    break;
+                case EventType.UIStarted:
+                    ASComplete.OnResolvedContextChanged += OnResolvedContextChanged;
+                    UpdateMenuItems();
+                    break;
+            }
+        }
 
         #endregion
-        
+
         #region Custom Methods
-       
+
         /// <summary>
         /// Initializes important variables
         /// </summary>
@@ -104,17 +118,40 @@ namespace SearchWithGoogle
         }
 
         /// <summary>
+        /// Saves the plugin settings
+        /// </summary>
+        void SaveSettings() => ObjectSerializer.Serialize(settingFilename, Settings);
+
+        /// <summary>
         /// Adds the required event handlers
         /// </summary>
-        void AddEventHandlers()
-        {
-        }
+        void AddEventHandlers() => EventManager.AddEventHandler(this, EventType.FileSwitch | EventType.UIStarted);
 
         /// <summary>
         /// Creates the required menu items
         /// </summary>
         void CreateMenuItems()
         {
+            editorMenuItem.Click += OnEditorMenuItemClick;
+            searchMenuItem.Click += OnEditorMenuItemClick;
+            AddMenuitem(PluginBase.MainForm.EditorMenu.Items, editorMenuItem);
+            AddMenuitem(((ToolStripMenuItem)PluginBase.MainForm.FindMenuItem("SearchMenu")).DropDownItems, searchMenuItem);
+        }
+
+        static void AddMenuitem(ToolStripItemCollection items, ToolStripItem item)
+        {
+            var index = FindItemIndex(items, TextHelper.GetString("ASCompletion.Label.GotoDeclaration"));
+            items.Insert(index, new ToolStripSeparator());
+            items.Insert(index, item);
+        }
+
+        static int FindItemIndex(ToolStripItemCollection items, string text)
+        {
+            for (var i = 0; i < items.Count; i++)
+            {
+                if (items[i].Text == text) return i;
+            }
+            return items.Count;
         }
 
         /// <summary>
@@ -122,13 +159,22 @@ namespace SearchWithGoogle
         /// </summary>
         void UpdateMenuItems()
         {
+            var sci = PluginBase.MainForm.CurrentDocument.SciControl;
+            var enabled = sci.SelTextSize > 0;
+            editorMenuItem.Enabled = enabled;
+            searchMenuItem.Enabled = enabled;
         }
 
-        /// <summary>
-        /// Saves the plugin settings
-        /// </summary>
-        void SaveSettings() => ObjectSerializer.Serialize(settingFilename, Settings);
+        static void Search()
+        {
+            var text = PluginBase.MainForm.CurrentDocument.SciControl.SelText;
+            ProcessHelper.StartAsync("https://www.google.by/search?q=" + text);
+        }
 
         #endregion
+
+        void OnResolvedContextChanged(ResolvedContext resolved) => UpdateMenuItems();
+
+        static void OnEditorMenuItemClick(object sender, EventArgs eventArgs) => Search();
     }
 }

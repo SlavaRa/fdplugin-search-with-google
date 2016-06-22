@@ -33,6 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PluginMain.cs" />
@@ -43,6 +45,10 @@
     <ProjectReference Include="..\..\..\..\PluginCore\PluginCore.csproj">
       <Project>{61885F70-B4DC-4B44-852D-5D6D03F2A734}</Project>
       <Name>PluginCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ASCompletion\ASCompletion.csproj">
+      <Project>{4EBF2653-9654-4E40-880E-0046B3D6210E}</Project>
+      <Name>ASCompletion</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

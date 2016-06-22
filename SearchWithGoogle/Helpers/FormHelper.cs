@@ -40,13 +40,17 @@ namespace SearchWithGoogle.Helpers
 
         public static RichTextBox GetOutputPanelTextBox()
         {
-            var result = GetOutputPanelPluginUI().Controls.OfType<RichTextBox>().FirstOrDefault();
-            return result;
+            return GetContextMenuOwner<RichTextBox>(GetOutputPanelPluginUI());
         }
 
         public static ListViewEx GetResultsPanelListViewEx()
         {
-            var result = GetResultPanelPluginUI().Controls.OfType<ListViewEx>().FirstOrDefault();
+            return GetContextMenuOwner<ListViewEx>(GetResultPanelPluginUI());
+        }
+
+        static T GetContextMenuOwner<T>(Control pluginUI)
+        {
+            var result = pluginUI.Controls.OfType<T>().FirstOrDefault();
             return result;
         }
     }

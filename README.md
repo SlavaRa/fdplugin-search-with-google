@@ -11,4 +11,11 @@ https://github.com/SlavaRa/fdplugin-search-with-google/releases
 
 ### Usage 
 
-Soon
+##### 1. Search with Google from Code Editor
+![image](https://dl.dropboxusercontent.com/u/63456010/FlashDevelop/SearchWitchGoogle/SearchWithGoogleFromCodeEditor.gif)
+
+##### 2. Search with Google from Output Panel
+![image](https://dl.dropboxusercontent.com/u/63456010/FlashDevelop/SearchWitchGoogle/SearchWithGoogleFromOutputPanel.gif)
+
+##### 3. Search with Google from Results Panel
+![image](https://dl.dropboxusercontent.com/u/63456010/FlashDevelop/SearchWitchGoogle/SearchWithGoogleFromResultsPanel.gif)

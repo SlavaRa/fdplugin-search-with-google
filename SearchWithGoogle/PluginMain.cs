@@ -1,11 +1,11 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ASCompletion.Completion;
 using PluginCore;
 using PluginCore.Helpers;
-using PluginCore.Localization;
 using PluginCore.Managers;
 using PluginCore.Utilities;
 using SearchWithGoogle.Helpers;
@@ -17,6 +17,7 @@ namespace SearchWithGoogle
         readonly ToolStripMenuItem editorMenuItem = new ToolStripMenuItem("&Search with Google");
         readonly ToolStripMenuItem searchMenuItem = new ToolStripMenuItem("&Search with Google");
         readonly ToolStripMenuItem outputPanelMenuItem = new ToolStripMenuItem("&Search with Google");
+        readonly ToolStripMenuItem resultsPanelMenuItem = new ToolStripMenuItem("&Search with Google");
         string settingFilename;
 
         #region Required Properties
@@ -91,6 +92,7 @@ namespace SearchWithGoogle
                 case EventType.UIStarted:
                     ASComplete.OnResolvedContextChanged += OnResolvedContextChanged;
                     FormHelper.GetOutputPanelTextBox().ContextMenuStrip.Opening += (o, args) => UpdateOutputPanelMenuItems();
+                    FormHelper.GetResultsPanelListViewEx().ContextMenuStrip.Opening += (o, args) => UpdateResultsPanelMenuItems();
                     UpdateMenuItems();
                     break;
             }
@@ -138,9 +140,11 @@ namespace SearchWithGoogle
             editorMenuItem.Click += OnCodeEditorMenuItemClick;
             searchMenuItem.Click += OnCodeEditorMenuItemClick;
             outputPanelMenuItem.Click += OnOutputPanelMenuItemClick;
+            resultsPanelMenuItem.Click += OnResultsPanelMenuItemClick;
             AddMenuitem(PluginBase.MainForm.EditorMenu.Items, editorMenuItem);
             AddMenuitem(((ToolStripMenuItem)PluginBase.MainForm.FindMenuItem("SearchMenu")).DropDownItems, searchMenuItem);
             AddMenuitem(FormHelper.GetOutputPanelTextBox().ContextMenuStrip.Items, outputPanelMenuItem);
+            AddMenuitem(FormHelper.GetResultsPanelListViewEx().ContextMenuStrip.Items, resultsPanelMenuItem);
         }
 
         static void AddMenuitem(ToolStripItemCollection items, ToolStripItem item)
@@ -160,11 +164,17 @@ namespace SearchWithGoogle
             editorMenuItem.Enabled = enabled;
             searchMenuItem.Enabled = enabled;
             UpdateOutputPanelMenuItems();
+            UpdateResultsPanelMenuItems();
         }
 
-        private void UpdateOutputPanelMenuItems()
+        void UpdateOutputPanelMenuItems()
         {
             outputPanelMenuItem.Enabled = !string.IsNullOrEmpty(FormHelper.GetOutputPanelTextBox().SelectedText);
+        }
+
+        void UpdateResultsPanelMenuItems()
+        {
+            resultsPanelMenuItem.Enabled = FormHelper.GetResultsPanelListViewEx().SelectedItems.Count == 1;
         }
 
         static void Search(string text) => ProcessHelper.StartAsync("https://www.google.by/search?q=" + text);
@@ -181,6 +191,11 @@ namespace SearchWithGoogle
         static void OnOutputPanelMenuItemClick(object sender, EventArgs e)
         {
             Search(FormHelper.GetOutputPanelTextBox().SelectedText);
+        }
+
+        static void OnResultsPanelMenuItemClick(object sender, EventArgs e)
+        {
+            Search(((Match) FormHelper.GetResultsPanelListViewEx().SelectedItems[0].Tag).ToString());
         }
     }
 }

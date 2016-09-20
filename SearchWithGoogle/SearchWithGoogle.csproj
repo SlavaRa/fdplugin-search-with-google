@@ -55,10 +55,6 @@
       <Project>{ef8ee44c-62b2-4744-85cb-278e1f37d418}</Project>
       <Name>OutputPanel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\ProjectManager\ProjectManager.csproj">
-      <Project>{78101C01-E186-4954-B1DD-DEBB7905FAD8}</Project>
-      <Name>ProjectManager</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ResultsPanel\ResultsPanel.csproj">
       <Project>{8b33c830-34cf-42e5-af2f-e8d9a4af49d1}</Project>
       <Name>ResultsPanel</Name>

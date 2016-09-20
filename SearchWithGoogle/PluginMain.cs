@@ -158,24 +158,18 @@ namespace SearchWithGoogle
         /// </summary>
         void UpdateMenuItems()
         {
-            var document = PluginBase.MainForm.CurrentDocument;
-            if (document == null) return;
-            var enabled = document.SciControl.SelTextSize > 0;
+            var sci = PluginBase.MainForm.CurrentDocument?.SciControl;
+            if (sci == null) return;
+            var enabled = sci.SelTextSize > 0;
             editorMenuItem.Enabled = enabled;
             searchMenuItem.Enabled = enabled;
             UpdateOutputPanelMenuItems();
             UpdateResultsPanelMenuItems();
         }
 
-        void UpdateOutputPanelMenuItems()
-        {
-            outputPanelMenuItem.Enabled = !string.IsNullOrEmpty(FormHelper.GetOutputPanelTextBox().SelectedText);
-        }
+        void UpdateOutputPanelMenuItems() => outputPanelMenuItem.Enabled = !string.IsNullOrEmpty(FormHelper.GetOutputPanelTextBox().SelectedText);
 
-        void UpdateResultsPanelMenuItems()
-        {
-            resultsPanelMenuItem.Enabled = FormHelper.GetResultsPanelListViewEx().SelectedItems.Count == 1;
-        }
+        void UpdateResultsPanelMenuItems() => resultsPanelMenuItem.Enabled = FormHelper.GetResultsPanelListViewEx().SelectedItems.Count == 1;
 
         static void Search(string text) => ProcessHelper.StartAsync("https://www.google.by/search?q=" + text);
 
@@ -183,15 +177,9 @@ namespace SearchWithGoogle
 
         void OnResolvedContextChanged(ResolvedContext resolved) => UpdateMenuItems();
 
-        static void OnCodeEditorMenuItemClick(object sender, EventArgs eventArgs)
-        {
-            Search(PluginBase.MainForm.CurrentDocument.SciControl.SelText);
-        }
+        static void OnCodeEditorMenuItemClick(object sender, EventArgs eventArgs) => Search(PluginBase.MainForm.CurrentDocument.SciControl.SelText);
 
-        static void OnOutputPanelMenuItemClick(object sender, EventArgs e)
-        {
-            Search(FormHelper.GetOutputPanelTextBox().SelectedText);
-        }
+        static void OnOutputPanelMenuItemClick(object sender, EventArgs e) => Search(FormHelper.GetOutputPanelTextBox().SelectedText);
 
         static void OnResultsPanelMenuItemClick(object sender, EventArgs e)
         {

@@ -1,4 +1,4 @@
-Search With Google Plugin for [FlashDevelop](http://www.flashdevelop.org)/[HaxeDevelop](http://www.haxedevelop.org)
+Search With Google Plugin for [FlashDevelop](http://flashdevelop.org)/[HaxeDevelop](https://haxedevelop.org/)
 ========================
 [![Build status](https://ci.appveyor.com/api/projects/status/2ilh8bc97hl52hye?svg=true)](https://ci.appveyor.com/project/slavara/fdplugin-search-with-google)
 [![Github Issues](https://img.shields.io/github/issues/SlavaRa/fdplugin-search-with-google.svg)](https://github.com/SlavaRa/fdplugin-search-with-google/issues)
